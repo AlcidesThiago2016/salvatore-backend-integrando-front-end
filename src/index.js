@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const { connectToDataBase } = require('./db/database-connection')
 const cors = require('cors')
+require('express-async-errors')
 
 const personagemRouter = require('./personagem/personagem.router')
 
