@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb')
 const service = require('./personagem.service')
+const personagem = require('./personagem.entity')
 
 async function readAll(req, res){
     // Acessamos a lista de personagens na service
@@ -26,12 +27,13 @@ async function readById(req, res){
 }
 
 async function create(req, res){
-    // Acessamos o Body da Requisição
-    const newItem = req.body
+    // Acessamos e validamos Body da Requisição
+    const { error, value } = personagem.validate(req.body)
 
-    // Checa se o nome esta presente no body
-    if(!newItem || !newItem.nome){
-        return res.send('Corpo da requisição dever conter a propriedade name')
+    const newItem = value
+
+    if (error) {
+        return res.status(400).send({ error: error.details[0].message})
     }
 
     // Adicionamos no banco atraves do service
@@ -45,12 +47,11 @@ async function updateById(req, res){
     // Acessando o ID do parametros de rota
     const id = req.params.id
 
-    // Acessando o body da requisicao
-    const newItem = req.body
+    // Acessamos e validamos Body da Requisição
+    const { error, value: newItem } = personagem.validate(req.body)
 
-    // Checar se o nome esta presente em body
-    if (!newItem || !newItem.nome){
-        return res.status(400).send('Corpo da requisição dever conter a propriedade name')
+    if (error) {
+        return res.status(400).send({ error: error.details[0].message})
     }
 
     // Atualizando no BD o novo item pelo id
