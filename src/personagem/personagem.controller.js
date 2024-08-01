@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 const service = require('./personagem.service')
 
 async function readAll(req, res){
